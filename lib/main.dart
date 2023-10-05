@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+import 'package:cardreader/payment_screen.dart';
 import 'package:cardreader/screens/status_screen.dart';
 import 'package:cardreader/utils/common_device_tile.dart';
 import 'package:cardreader/utils/common_scaffold.dart';
@@ -11,6 +12,7 @@ import 'package:card_sdk/M6pBleBean.dart';
 import 'package:card_sdk/M6pBleControl.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(chooseWidget(window.defaultRouteName));
@@ -31,8 +33,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return GetMaterialApp(
+      title: 'Card Payment',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -99,8 +102,6 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
     });
-
-
   }
 
   Future<void> requestBluetoothPermission() async {
@@ -220,7 +221,28 @@ class _MyHomePageState extends State<MyHomePage> {
     return CommonScaffold(title: 'Card Reader Check', body: Padding(
       padding: EdgeInsets.all(15),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            "Card Reader Setup",
+            style: TextStyle(
+                fontFamily: 'Urbanist',
+                fontSize: const RD(d: 16, t: 16, m: 16, s: 16).get(context),
+                color: Color.fromRGBO(69, 100, 130, 1),
+                fontWeight: FontWeight.w700),
+          ),
+          SizedBox(height: 10,),
+          if(isBluetoothOn)
+            Text(
+              "Select the device that starts with I9-000XXX",
+              style: TextStyle(
+                  fontFamily: 'Urbanist',
+                  fontStyle: FontStyle.italic,
+                  fontSize: const RD(d: 13, t: 13, m: 13, s: 13).get(context),
+                  color: Color.fromRGBO(167, 173, 185, 1),
+                  fontWeight: FontWeight.w700),
+            ),
+          SizedBox(height: 10,),
           if(isBluetoothOn)
           Expanded(
             //child: Text('123'),
@@ -259,7 +281,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
             child: CustomButton(
               label: '(Or) Enter Card Details Manually',
-              onTap: (){},
+              onTap: (){
+                Get.to(() =>Payment('https://pay.rydeum.info', 'RA4BR', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjBmMzQxYzNiMjZiNzVlNmE2MDdlY2UiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo4ODQ5LCJpYXQiOjE2NzM0MjAzNTksImV4cCI6MTY3MzUwNjc1OSwic3ViIjoicHJvdmlkZXIifQ.r6WFmK0kqfBJmMe50VgyDuuIuWDymPIsF2PzMlESIew',
+                    "",
+                    "",
+                    ""
+
+                ));
+              },
             ),
           ),
 

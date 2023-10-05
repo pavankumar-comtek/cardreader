@@ -1,9 +1,11 @@
 import 'package:card_sdk/M6pBleControl.dart';
+import 'package:cardreader/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:card_sdk/M6pBleBean.dart';
 import 'package:cardreader/utils/common_scaffold.dart';
 import 'package:cardreader/utils/custom_button.dart';
 import 'package:cardreader/utils/ui_parameters.dart';
+import 'package:get/get.dart';
 
 class StatusScreen extends StatefulWidget {
   const StatusScreen({Key? key, required this.deviceName}) : super(key: key);
@@ -103,18 +105,7 @@ class _StatusScreenState extends State<StatusScreen> {
             'CardType:${cardType}\n' +
             'CardNfcCompany: ${cardInfo.nfcCompany}\n' +
             'cardexpiryDate:${cardInfo.cardexpiryDate}\n' ;
-            // 'CardSerial:${cardInfo.cardSerial}\n' +
-            // 'CVM:${cardInfo.cvm}\n' +
-            // 'ICData:${cardInfo.icdata}\n' +
-            // 'TUSN:${cardInfo.tusn}\n' +
-            // 'tsn:${cardInfo.tsn}\n' +
-            // 'encryTrack:${cardInfo.encryTrack}\n' +
-            // 'Tracks:${cardInfo.tracks}\n' +
-            // 'TracksLen:${cardInfo.trackLen}\n' +
-            // 'OriginalTrack:${cardInfo.originalTrack}\n' +
-            // 'OriginalTracklength:${cardInfo.originalTracklength}\n' +
-            // 'serviceCode:${cardInfo.serviceCode}\n' +
-            // 'batteryLevel:${cardInfo.batteryLevel}\n'
+
 
 
         if (cardInfo.ksn != null) {
@@ -156,8 +147,14 @@ class _StatusScreenState extends State<StatusScreen> {
 
           print(str);
         }
-
+        itronBle.disconnect();
         //Navigate to Card Payment Screen
+        Get.to(() =>Payment('https://pay.rydeum.info', 'RA4BR', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjBmMzQxYzNiMjZiNzVlNmE2MDdlY2UiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo4ODQ5LCJpYXQiOjE2NzM0MjAzNTksImV4cCI6MTY3MzUwNjc1OSwic3ViIjoicHJvdmlkZXIifQ.r6WFmK0kqfBJmMe50VgyDuuIuWDymPIsF2PzMlESIew',
+            cardInfo.cardNo!,
+          cardInfo.cardexpiryDate!,
+          cardInfo.cardName!
+
+        ));
       } else {
       //  + status.toRadixString(16)
         str = 'Error Reading Card, Try again after 5 seconds...' ;
@@ -197,6 +194,8 @@ class _StatusScreenState extends State<StatusScreen> {
     }
     return val;
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -245,10 +244,12 @@ class _StatusScreenState extends State<StatusScreen> {
                     fontWeight: FontWeight.w700),
               ),
               Text(textStr,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       fontFamily: 'Urbanist-Bold',
                       fontSize:
                           const RD(d: 22, t: 22, m: 22, s: 22).get(context),
+                      overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
                       color: Color.fromRGBO(90, 202, 226, 1))),

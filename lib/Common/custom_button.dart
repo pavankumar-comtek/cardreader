@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:cardreader/utils/ui_parameters.dart';
+import 'package:cardreader/Common/ui_parameters.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton(
@@ -33,25 +33,24 @@ class CustomButton extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child:
-        // Row(
-        //   mainAxisSize: MainAxisSize.min,
-        //   children: <Widget>[
-        Padding(
-          // padding: const EdgeInsets.all(12.0),
-            padding:
-            const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: Center(
-                child: Text(
+            // Row(
+            //   mainAxisSize: MainAxisSize.min,
+            //   children: <Widget>[
+            Padding(
+                // padding: const EdgeInsets.all(12.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                child: Center(
+                    child: Text(
                   label,
                   // textAlign: TextAlign.end,
-                  textAlign: TextAlign.center,
                   style: defaultTs(context).merge(TextStyle(
                     color: (isEnabled ?? true)
                         ? Theme.of(context).colorScheme.onBackground
                         : Theme.of(context).focusColor.withOpacity(0.3),
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Urbanist',
-                    fontSize: const RD(d: 16, t: 16, m: 16, s: 16).get(context),
+                    fontSize: 16,
                     // height: 1.5
                   )),
                 ))),
@@ -137,15 +136,15 @@ class CustomButton_main extends StatelessWidget {
           child: InkWell(
             onTap: onTap,
             child:
-            // Row(
-            //   mainAxisSize: MainAxisSize.min,
-            //   children: <Widget>[
-            Padding(
-              // padding: const EdgeInsets.all(12.0),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24, vertical: 16),
-                child: Center(
-                    child: Text(
+                // Row(
+                //   mainAxisSize: MainAxisSize.min,
+                //   children: <Widget>[
+                Padding(
+                    // padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    child: Center(
+                        child: Text(
                       label,
                       // textAlign: TextAlign.end,
                       style: defaultTs(context).merge(TextStyle(

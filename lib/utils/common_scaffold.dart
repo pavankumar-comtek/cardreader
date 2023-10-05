@@ -1,4 +1,6 @@
+import 'package:cardreader/Common/ui_parameters.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CommonScaffold extends StatelessWidget {
   CommonScaffold(
@@ -14,7 +16,8 @@ class CommonScaffold extends StatelessWidget {
         automaticallyImplyLeading: true,
         leading: IconButton(
             onPressed: () {
-             Navigator.pop(context);
+             // Navigator.pop(context);
+              SystemNavigator.pop();
               // onTap!();
             },
             icon: Icon(
@@ -29,7 +32,7 @@ class CommonScaffold extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xFF2B3951),
-              fontSize: 24,
+              fontSize: const RD(d: 20, t: 20, m: 22, s: 22).get(context),
               fontFamily: 'Urbanist',
               fontWeight: FontWeight.w700,
               height: 1.00,
