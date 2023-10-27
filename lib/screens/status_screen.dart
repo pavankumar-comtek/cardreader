@@ -37,7 +37,6 @@ class _StatusScreenState extends State<StatusScreen> {
     // TODO: implement dispose
     itronBle.disconnect();
     super.dispose();
-
   }
 
   void payCardOrICCCard(String cash, String countryCode, String currencyCode) {
@@ -99,30 +98,28 @@ class _StatusScreenState extends State<StatusScreen> {
         cardType = "Enter";
       }
       if (status == 0) {
-        str = 'Consume success\n' +
-            'CardNumber:${cardInfo.cardNo!}\n' +
-            'CardName:${cardInfo.cardName}\n' +
-            'CardType:${cardType}\n' +
-            'CardNfcCompany: ${cardInfo.nfcCompany}\n' +
-            'cardexpiryDate:${cardInfo.cardexpiryDate}\n' ;
+        str = 'Consume success\n';
+        // 'CardNumber:${cardInfo.cardNo!}\n' +
+        // 'CardName:${cardInfo.cardName}\n' +
+        // 'CardType:${cardType}\n' +
+        // 'CardNfcCompany: ${cardInfo.nfcCompany}\n' +
+        // 'cardexpiryDate:${cardInfo.cardexpiryDate}\n' ;
 
-
-
-        if (cardInfo.ksn != null) {
-          str = str + 'ksn:${cardInfo.ksn}\n';
-        }
-        if (cardInfo.dataKsn != null) {
-          str = str + 'dataKsn:${cardInfo.dataKsn}\n';
-        }
-        if (cardInfo.trackKsn != null) {
-          str = str + 'trackKsn:${cardInfo.trackKsn}\n';
-        }
-        if (cardInfo.macKsn != null) {
-          str = str + 'macKsn:${cardInfo.macKsn}\n';
-        }
-        if (cardInfo.emvKsn != null) {
-          str = str + 'emvKsn:${cardInfo.emvKsn}\n';
-        }
+        // if (cardInfo.ksn != null) {
+        //   str = str + 'ksn:${cardInfo.ksn}\n';
+        // }
+        // if (cardInfo.dataKsn != null) {
+        //   str = str + 'dataKsn:${cardInfo.dataKsn}\n';
+        // }
+        // if (cardInfo.trackKsn != null) {
+        //   str = str + 'trackKsn:${cardInfo.trackKsn}\n';
+        // }
+        // if (cardInfo.macKsn != null) {
+        //   str = str + 'macKsn:${cardInfo.macKsn}\n';
+        // }
+        // if (cardInfo.emvKsn != null) {
+        //   str = str + 'emvKsn:${cardInfo.emvKsn}\n';
+        // }
 
         if ((cardInfo.originalTrack != null) &&
             (cardInfo.originalTrack!.length > 0) &&
@@ -140,35 +137,41 @@ class _StatusScreenState extends State<StatusScreen> {
             cardInfo.track2 = cardInfo.originalTrack!
                 .substring(track1Len, track1Len + track2Len);
           }
-          str = str +
-              'track1Len: ${track1Len}  track2Len:${track2Len} \n' +
-              'cardInfo.track1: ${cardInfo.track1}  \n' +
-              'cardInfo.track2: ${cardInfo.track2}';
+          // str = str +
+          //     'track1Len: ${track1Len}  track2Len:${track2Len} \n' +
+          //     'cardInfo.track1: ${cardInfo.track1}  \n' +
+          //     'cardInfo.track2: ${cardInfo.track2}';
 
           print(str);
         }
         itronBle.disconnect();
         //Navigate to Card Payment Screen
-        Get.to(() =>Payment('https://pay.rydeum.info', 'RA4BR', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjBmMzQxYzNiMjZiNzVlNmE2MDdlY2UiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo4ODQ5LCJpYXQiOjE2NzM0MjAzNTksImV4cCI6MTY3MzUwNjc1OSwic3ViIjoicHJvdmlkZXIifQ.r6WFmK0kqfBJmMe50VgyDuuIuWDymPIsF2PzMlESIew',
+        Get.to(() => Payment(
+            'https://pay.rydeum.info',
+            'RA4BR',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjBmMzQxYzNiMjZiNzVlNmE2MDdlY2UiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo4ODQ5LCJpYXQiOjE2NzM0MjAzNTksImV4cCI6MTY3MzUwNjc1OSwic3ViIjoicHJvdmlkZXIifQ.r6WFmK0kqfBJmMe50VgyDuuIuWDymPIsF2PzMlESIew',
             cardInfo.cardNo!,
-          cardInfo.cardexpiryDate!,
-          cardInfo.cardName!
-
-        ));
+            cardInfo.cardexpiryDate!,
+            cardInfo.cardName!));
       } else {
-      //  + status.toRadixString(16)
-        str = 'Error Reading Card, Try again after 5 seconds...' ;
+        //  + status.toRadixString(16)
+        str = 'Error Reading Card, Try again after 5 seconds...';
+        itronBle.disconnect();
+        Future.delayed(const Duration(seconds: 5), () {
+          payCardOrICCCard(cash, countryCode, currencyCode);
+        });
         //Error while reading card.
       }
       setState(() {
         textStr = str;
       });
-
     }, (errorID, msg) {
+      itronBle.disconnect();
       setState(() {
         textStr = ' error code: ${errorID} msg: ${msg}';
       });
     }, (errorID, msg, code) {
+      itronBle.disconnect();
       setState(() {
         textStr = ' error code: ${errorID} msg: ${msg} data code: ${code}';
       });
@@ -194,8 +197,6 @@ class _StatusScreenState extends State<StatusScreen> {
     }
     return val;
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -223,13 +224,15 @@ class _StatusScreenState extends State<StatusScreen> {
                       style: TextStyle(
                         color: Color.fromRGBO(85, 221, 87, 1),
                         fontFamily: 'Urbanist-Medium',
-                        fontSize: const RD(d: 24, t: 24, m: 18, s: 16).get(context),
+                        fontSize:
+                            const RD(d: 24, t: 24, m: 18, s: 16).get(context),
                       )),
-                  Text(widget.deviceName,
-                  style: TextStyle(
-                      color: Color.fromRGBO(170, 170, 170, 1),
-            fontSize: RD(d:16, t:16, m:16,s:16).get(context)
-        ),)
+                  Text(
+                    widget.deviceName,
+                    style: TextStyle(
+                        color: Color.fromRGBO(170, 170, 170, 1),
+                        fontSize: RD(d: 16, t: 16, m: 16, s: 16).get(context)),
+                  )
                 ],
               ),
               SizedBox(

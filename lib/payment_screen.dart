@@ -14,8 +14,11 @@ import 'Common/dailog.dart';
 import 'finish_screen.dart';
 
 class Payment extends StatefulWidget {
-  String myurl, referal, token,cardNumber, expiryDate,cardHolderName;
-  Payment(this.myurl, this.referal, this.token,this.cardNumber,this.expiryDate,this.cardHolderName, {Key? key}) : super(key: key);
+  String myurl, referal, token, cardNumber, expiryDate, cardHolderName;
+  Payment(this.myurl, this.referal, this.token, this.cardNumber,
+      this.expiryDate, this.cardHolderName,
+      {Key? key})
+      : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return PaymentState();
@@ -58,9 +61,17 @@ class PaymentState extends State<Payment> {
     cardNumberController.text = widget.cardNumber;
     cardHolderNameController.text = widget.cardHolderName;
     cardHolderName = widget.cardHolderName;
-    expiryDateController.text = widget.expiryDate != "" ? widget.expiryDate.substring(2)+"/"+widget.expiryDate.substring(0,2) : "";
+    expiryDateController.text = widget.expiryDate != ""
+        ? widget.expiryDate.substring(2) +
+            "/" +
+            widget.expiryDate.substring(0, 2)
+        : "";
     log("expiry Date :: ${expiryDateController.text}");
-    expiryDate = widget.expiryDate != "" ? widget.expiryDate.substring(2)+"/"+widget.expiryDate.substring(0,2) : "";
+    expiryDate = widget.expiryDate != ""
+        ? widget.expiryDate.substring(2) +
+            "/" +
+            widget.expiryDate.substring(0, 2)
+        : "";
   }
 
   @override
@@ -92,25 +103,26 @@ class PaymentState extends State<Payment> {
                                         },
                                         children: [
                                           Row(
-                                            children:  [
+                                            children: [
                                               Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: IconButton(
-                                                icon: const Icon(
-                                                    Icons.arrow_back),
-                                                onPressed: () {
-                                                   print('RAMAMMAMAMA Exit the APP 22');
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => const Finish()),
-                          // );
-                                                  Get.back();
-                                                },
+                                                alignment: Alignment.centerLeft,
+                                                child: IconButton(
+                                                  icon: const Icon(
+                                                      Icons.arrow_back),
+                                                  onPressed: () {
+                                                    print(
+                                                        'RAMAMMAMAMA Exit the APP 22');
+                                                    // Navigator.push(
+                                                    //   context,
+                                                    //   MaterialPageRoute(
+                                                    //       builder: (context) => const Finish()),
+                                                    // );
+                                                    //   Get.back();
+                                                    SystemNavigator.pop();
+                                                  },
+                                                ),
                                               ),
-                                            ),
-                                              
-                                           const Expanded(
+                                              const Expanded(
                                                   child: Align(
                                                       alignment:
                                                           Alignment.center,
@@ -178,7 +190,8 @@ class PaymentState extends State<Payment> {
                                                           CustomTextFormField(
                                                         // prefixIcon: AppIcons.mail,
                                                         label: 'Expiry date',
-                                                        controller: expiryDateController,
+                                                        controller:
+                                                            expiryDateController,
                                                         hintText:
                                                             'Enter Expiry date',
                                                         textInputType:
@@ -301,16 +314,18 @@ class PaymentState extends State<Payment> {
                                                     child: Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                    .only(
+                                                                .only(
                                                                 right: 10),
                                                         child:
                                                             CustomTextFormField(
                                                           // prefixIcon: AppIcons.profile,
                                                           hintText:
                                                               'Enter your first name',
-                                                          label: 'CardHolder Name',
-                                                          controller: cardHolderNameController,
- 
+                                                          label:
+                                                              'CardHolder Name',
+                                                          controller:
+                                                              cardHolderNameController,
+
                                                           inputFormatter: [
                                                             FilteringTextInputFormatter
                                                                 .allow(RegExp(

@@ -42,7 +42,7 @@ dependencies:
   fast_gbk: ^1.0.0
   flutter_inset_box_shadow: ^1.0.8
   permission_handler: ^11.0.0
-  flutter_blue: ^0.8.0
+  flutter_blue_plus: ^1.20.4
   fluttertoast: ^8.2.2
   get: ^4.6.6
   get_storage: ^2.1.1
