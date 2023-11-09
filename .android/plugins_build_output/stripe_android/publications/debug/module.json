@@ -1,0 +1,146 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.flutter.stripe",
+    "module": "stripe_android_debug",
+    "version": "1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5"
+    }
+  },
+  "variants": [
+    {
+      "name": "debugVariantDebugApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "io.flutter",
+          "module": "flutter_embedding_debug",
+          "version": {
+            "requires": "1.0.0-bd986c5ed20a62dc34b7718c50abc782beae4c33"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.7.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "stripe_android_debug-1.0.aar",
+          "url": "stripe_android_debug-1.0.aar",
+          "size": 7240563,
+          "sha512": "dcd64375556efd209551e9794a25613a13a16d4bca95ef3f049b2c076285b2001d1bdf14bb5810b824fc1e041a354eb5a644e64f305b7f8619038d072c11f842",
+          "sha256": "4c4f2c80d9fdf763126b6a971dd3a7fdb3abf7401c629f6b10775246e7e48a70",
+          "sha1": "dce2b637ea2a25b08064a67d3e0e0702d16abf18",
+          "md5": "6416db06b1c9312837ecd2f4111f48d4"
+        }
+      ]
+    },
+    {
+      "name": "debugVariantDebugRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "io.flutter",
+          "module": "flutter_embedding_debug",
+          "version": {
+            "requires": "1.0.0-bd986c5ed20a62dc34b7718c50abc782beae4c33"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.7.10"
+          }
+        },
+        {
+          "group": "com.github.bumptech.glide",
+          "module": "glide",
+          "version": {
+            "requires": "4.12.0"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-runtime-ktx",
+          "version": {
+            "requires": "2.4.1"
+          }
+        },
+        {
+          "group": "com.stripe",
+          "module": "stripe-android",
+          "version": {
+            "requires": "20.31.+"
+          }
+        },
+        {
+          "group": "com.stripe",
+          "module": "financial-connections",
+          "version": {
+            "requires": "20.31.+"
+          }
+        },
+        {
+          "group": "com.google.android.material",
+          "module": "material",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "androidx.appcompat",
+          "module": "appcompat",
+          "version": {
+            "requires": "1.4.1"
+          }
+        },
+        {
+          "group": "androidx.legacy",
+          "module": "legacy-support-v4",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.4"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "stripe_android_debug-1.0.aar",
+          "url": "stripe_android_debug-1.0.aar",
+          "size": 7240563,
+          "sha512": "dcd64375556efd209551e9794a25613a13a16d4bca95ef3f049b2c076285b2001d1bdf14bb5810b824fc1e041a354eb5a644e64f305b7f8619038d072c11f842",
+          "sha256": "4c4f2c80d9fdf763126b6a971dd3a7fdb3abf7401c629f6b10775246e7e48a70",
+          "sha1": "dce2b637ea2a25b08064a67d3e0e0702d16abf18",
+          "md5": "6416db06b1c9312837ecd2f4111f48d4"
+        }
+      ]
+    }
+  ]
+}

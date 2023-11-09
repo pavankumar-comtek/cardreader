@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
+import 'package:cardreader/api/API.dart';
+import 'package:cardreader/models/cardtoken_response.dart';
 import 'package:cardreader/payment_screen.dart';
 import 'package:cardreader/screens/status_screen.dart';
 import 'package:cardreader/utils/common_device_tile.dart';
@@ -11,26 +15,46 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:card_sdk/M6pBleBean.dart';
 import 'package:card_sdk/M6pBleControl.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-void main() => runApp(chooseWidget(window.defaultRouteName));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = "pk_test_nVWvz0F2wXEf6pIjG0TSmIRW";
+  //Stripe.publishableKey = "pk_live_vddmhz2nlIkrX4jjpEQ8bMyw";
+  //Stripe.merchantIdentifier = "";
+  await Stripe.instance.applySettings();
+  return runApp(chooseWidget(window.defaultRouteName));
+}
 
+// Set up a MethodChannel
+const platform = const MethodChannel('com.rydeum.partner/result');
 Widget chooseWidget(String route) {
-  switch (route) {
-    case 'splashRoute':
-      return MyApp();
+  // switch (route) {
+  //   case '/route':
+  //     return MyApp(authToken: route.split("/").last);
 
-    default:
-      return MyApp();
-  }
+  //   default:
+  //     return MyApp(authToken: "",);
+  // }
+  // route =
+  //     "/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzI5ZDM2MDQyNDBiZTVkMGEzMWFiNGMiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo0ODQzLCJpYXQiOjE2OTk1MjE5MTYsImV4cCI6MTY5OTYwODMxNiwic3ViIjoicHJvdmlkZXIifQ.JNhF65Qv_XWskdwoFBetsOrbAPjURQ4S9cv--gk52R0";
+  api.authToken = route.split("/").last == ""
+      ? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIxbWFoZXNoZEBnbWFpbC5jb20iLCJzdWIiOiI2MjBhNTFkN2UxNzg1NjFkYWI1ZjM2ZTUiLCJpZCI6IjYyMGE1MWQ3ZTE3ODU2MWRhYjVmMzZlNSIsImdyYW50VHlwZSI6ImFjY2VzcyIsImlhdCI6MTY0NTIwMzc4NSwiZXhwIjoxNjQ2MDQzNzg1fQ.xYLSg6wJypAybSHhmqoAygV5xJJGR0UngJlv7F7Ooog"
+      : route.split("/").last;
+  print(
+      "Flutter Module  -RAMAMMA Route from native is $route  and split is ${route.split("/").last}");
+  return MyApp(authToken: route.split("/").last);
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  const MyApp({super.key, required this.authToken});
+  final String authToken;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -74,15 +98,35 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<M6pBleDevice> blueList = [];
   String bluetoothStatus =
-      'Bluetooth is OFF, Please switch on Bluetooth to Continue';
+      'Bluetooth is OFF,Please switch on Bluetooth to Continue';
   bool isBluetoothOn = false;
   BleControl bleControl = BleControl();
   FlutterBlue flutterBlue = FlutterBlue.instance;
   late StreamSubscription<BluetoothState> stateSubscription;
+  CardEditController cardEditController = CardEditController(
+    initialDetails: CardFieldInputDetails(
+      complete: true,
+      last4: "4242",
+      number: "4242424242424242",
+      expiryMonth: 12,
+      expiryYear: 2025,
+      brand: "Visa",
+      cvc: '123',
+      postalCode: '500084',
+      validCVC: CardValidationState.Valid,
+      validExpiryDate: CardValidationState.Valid,
+      validNumber: CardValidationState.Valid,
+    ),
+  );
+  CardFieldInputDetails? cardFieldInputDetails;
+  String? token = '';
+
   @override
   void initState() {
+    platform.setMethodCallHandler(_receiveFromHost);
     // TODO: implement initState
     super.initState();
+
     stateSubscription = flutterBlue.state.listen((BluetoothState state) {
       if (state == BluetoothState.on) {
         // Bluetooth is on, start scanning
@@ -96,9 +140,9 @@ class _MyHomePageState extends State<MyHomePage> {
         // Bluetooth is off or not available, handle it here
         // For now, we'll just print a message
         checkBluetoothPermissionAndAvailability();
-        if (kDebugMode) {
-          print('BluetoothState is Off');
-        }
+
+        print('Flutter Module -BluetoothState is Off');
+
         setState(() {
           blueList.clear();
           bluetoothStatus =
@@ -109,6 +153,28 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> _receiveFromHost(MethodCall call) async {
+    var jData;
+
+    try {
+      if (call.method == "getToken") {
+        final String data = call.arguments;
+        jData = await jsonDecode(data);
+      }
+    } on PlatformException catch (error) {
+      print("Flutter Module -$error");
+    }
+    setState(() {
+      token = jData['token'];
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Token :: $token  ${api.authToken}'),
+      ),
+    );
+  }
+
   Future<void> requestBluetoothPermission() async {
     if (await Permission.bluetooth.request().isGranted) {
       // Permission is granted, proceed with Bluetooth operations
@@ -116,14 +182,12 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       // Permission denied, handle it (show a dialog, ask user to enable it manually, etc.)
       // For now, we'll just print a message
-      print('Bluetooth permission denied.');
+      print('Flutter Module -Bluetooth permission denied.');
       PermissionStatus bluetoothPerm = await Permission.bluetooth.request();
       if (bluetoothPerm.isGranted) {
         checkBluetoothAvailability();
       } else {
-        if (kDebugMode) {
-          print('Bluetooth permission denied.');
-        }
+        print('Flutter Module -Bluetooth permission denied.');
       }
     }
   }
@@ -137,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //   // Bluetooth is not available, handle it (show a dialog, ask user to enable it manually, etc.)
       //   // For now, we'll just print a message
       //   if (kDebugMode) {
-      //     print('Bluetooth is not available.');
+      //     print('Flutter Module -Bluetooth is not available.');
       //   }
       // }
 
@@ -149,25 +213,22 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         // Permission denied, handle it (show a dialog, ask user to enable it manually, etc.)
         // For now, we'll just print a message
-        if (kDebugMode) {
-          print('BluetoothScan permission denied.');
-        }
+
+        print('Flutter Module -BluetoothScan permission denied.');
+
         PermissionStatus bluetoothScanPerm =
             await Permission.bluetoothScan.request();
         if (bluetoothScanPerm.isGranted) {
           checkBluetoothAvailability();
         } else {
-          if (kDebugMode) {
-            print('BluetoothScan permission denied.');
-          }
+          print('Flutter Module -BluetoothScan permission denied.');
         }
       }
     } else {
       // Bluetooth is not available, handle it (show a dialog, ask user to enable it manually, etc.)
       // For now, we'll just print a message
-      if (kDebugMode) {
-        print('Bluetooth is not available.');
-      }
+
+      print('Flutter Module -Bluetooth is not available.');
     }
   }
 
@@ -196,7 +257,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return CustomDeviceTile(
       onTap: () async {
-        print(index);
+        print("Flutter Module - Bluetooth Device index::$index");
         M6pBleDevice device = blueList[index];
         bool isBluetoothAvailable = await flutterBlue.isOn;
         if (isBluetoothAvailable) {
@@ -219,7 +280,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void startSearch() async {
-    print('start search bluetooth');
+    print('Flutter Module -start search bluetooth');
     /*
                 itronBle.startScan().listen((event) {
                   //print(event);
@@ -235,7 +296,7 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {
               blueList.add(device);
             });
-            print(device);
+            print("Flutter Module -$device");
           }
         });
       } else {
@@ -244,9 +305,7 @@ class _MyHomePageState extends State<MyHomePage> {
         if (bluetoothScanPerm.isGranted) {
           startSearch();
         } else {
-          if (kDebugMode) {
-            print('BluetoothScan permission denied.');
-          }
+          print('Flutter Module -BluetoothScan permission denied.');
         }
       }
     } else {
@@ -255,9 +314,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (bluetoothConnectPerm.isGranted) {
         startSearch();
       } else {
-        if (kDebugMode) {
-          print('Bluetooth permission denied.');
-        }
+        print('Flutter Module -Bluetooth permission denied.');
       }
     }
   }
@@ -271,6 +328,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     // startSearch();
+    //generateStripeToken();
   }
 
   @override
@@ -281,6 +339,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return CommonScaffold(
         title: 'Card Reader Check',
         body: Padding(
@@ -288,6 +347,25 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Visibility(
+              //   child: CardField(
+              //     controller: cardEditController,
+              //     decoration: const InputDecoration(
+              //       labelText: 'Card Number',
+              //     ),
+              //     onCardChanged: (CardFieldInputDetails? card) {
+              //       setState(() {
+              //         cardFieldInputDetails = card;
+              //       });
+              //     },
+              //   ),
+              //   visible: true,
+              // ),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       generateStripeToken();
+              //     },
+              //     child: Text("Generate")),
               Text(
                 "Card Reader Setup",
                 style: TextStyle(
@@ -324,7 +402,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   // flex: 20,
                 ),
-              if (!isBluetoothOn) Text(bluetoothStatus),
+              if (!isBluetoothOn)
+                Text(
+                  bluetoothStatus,
+                  style: TextStyle(
+                    color: Color(0xFF2b3951),
+                    fontSize: const RD(d: 16, t: 16, m: 16, s: 16).get(context),
+                    fontFamily: 'Urbanist',
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               Spacer(),
               Center(
                 // child: ElevatedButton(

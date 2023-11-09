@@ -98,7 +98,7 @@ class _StatusScreenState extends State<StatusScreen> {
         cardType = "Enter";
       }
       if (status == 0) {
-        str = 'Consume success\n';
+        str = 'Consume success CardName:${cardInfo.cardName}\n ';
         // 'CardNumber:${cardInfo.cardNo!}\n' +
         // 'CardName:${cardInfo.cardName}\n' +
         // 'CardType:${cardType}\n' +
@@ -129,7 +129,8 @@ class _StatusScreenState extends State<StatusScreen> {
               _hexToInt(cardInfo.originalTracklength!.substring(0, 2)) * 2;
           int track2Len =
               _hexToInt(cardInfo.originalTracklength!.substring(2, 4));
-          print('track1Len: ${track1Len}  track2Len:${track2Len}');
+          print(
+              'Flutter Module -track1Len: ${track1Len}  track2Len:${track2Len}');
           if (track1Len > 0) {
             cardInfo.track1 = cardInfo.originalTrack!.substring(0, track1Len);
           }
@@ -142,7 +143,7 @@ class _StatusScreenState extends State<StatusScreen> {
           //     'cardInfo.track1: ${cardInfo.track1}  \n' +
           //     'cardInfo.track2: ${cardInfo.track2}';
 
-          print(str);
+          print("Flutter Module -$str");
         }
         itronBle.disconnect();
         //Navigate to Card Payment Screen
@@ -152,7 +153,7 @@ class _StatusScreenState extends State<StatusScreen> {
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjBmMzQxYzNiMjZiNzVlNmE2MDdlY2UiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo4ODQ5LCJpYXQiOjE2NzM0MjAzNTksImV4cCI6MTY3MzUwNjc1OSwic3ViIjoicHJvdmlkZXIifQ.r6WFmK0kqfBJmMe50VgyDuuIuWDymPIsF2PzMlESIew',
             cardInfo.cardNo!,
             cardInfo.cardexpiryDate!,
-            cardInfo.cardName!));
+            cardInfo.cardName!.replaceAll(RegExp(r'\s+/$'), '')));
       } else {
         //  + status.toRadixString(16)
         str = 'Error Reading Card, Try again after 5 seconds...';

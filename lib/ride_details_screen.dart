@@ -4,11 +4,12 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:cardreader/api/API.dart';
+import 'package:cardreader/models/cardtoken_response.dart';
 import 'package:easy_separator/easy_separator.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:cardreader/Api/API.dart';
 import 'package:cardreader/Common/dailog.dart';
 import 'package:cardreader/Common/other.dart';
 import 'package:cardreader/payment_success_screen.dart';
@@ -25,7 +26,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
 class RideDetails extends StatefulWidget {
-  double amount;
+  double amount, convienceFee, appCommission, operatorCommission, chargeAmount;
+
   String token,
       firstname,
       lastname,
@@ -37,11 +39,17 @@ class RideDetails extends StatefulWidget {
       expYear,
       zipCode,
       referal,
-      myurl;
+      myurl,
+      stripeCardToken;
+  CardTokenResponse cardTokenResponse;
 
   RideDetails(
       this.token,
       this.amount,
+      this.convienceFee,
+      this.appCommission,
+      this.operatorCommission,
+      this.chargeAmount,
       this.firstname,
       this.lastname,
       this.cardtype,
@@ -53,6 +61,8 @@ class RideDetails extends StatefulWidget {
       this.zipCode,
       this.referal,
       this.myurl,
+      this.stripeCardToken,
+      this.cardTokenResponse,
       {Key? key})
       : super(key: key);
   // const RideDetails({Key? key, required this.amount}) : super(key: key);
@@ -88,7 +98,8 @@ class RideDetailsState extends State<RideDetails> {
   }
 
   void loaddata() async {
-    processingfee = roundOffToXDecimal((widget.amount * 0.05)).toDouble();
+    //processingfee = roundOffToXDecimal((widget.amount * 0.05)).toDouble();
+    processingfee = widget.convienceFee;
 
     totalamount =
         roundOffToXDecimal((widget.amount + processingfee)).toDouble();
@@ -340,7 +351,7 @@ class RideDetailsState extends State<RideDetails> {
                                                           isSignatureDraw =
                                                               true;
                                                           print(
-                                                              'RAMAMMAMAA onDrawEnd');
+                                                              'Flutter Module -RAMAMMAMAA onDrawEnd');
                                                         },
                                                         // backgroundColor: Colors.white,
                                                         strokeColor:
@@ -433,11 +444,23 @@ class RideDetailsState extends State<RideDetails> {
                                                             widget.zipCode,
                                                       };
                                                       callPaymentAPI(
-                                                          data,
-                                                          widget.token,
                                                           totalamount,
+                                                          widget
+                                                              .cardTokenResponse
+                                                              .data
+                                                              .cards
+                                                              .first
+                                                              .id,
+                                                          widget
+                                                              .cardTokenResponse
+                                                              .data
+                                                              .cards
+                                                              .first
+                                                              .customer,
+                                                          tip,
                                                           widget.referal,
-                                                          widget.myurl);
+                                                          widget.myurl,
+                                                          widget.token);
                                                     } else {
                                                       displaydialog(
                                                           context,
@@ -455,15 +478,36 @@ class RideDetailsState extends State<RideDetails> {
             })));
   }
 
-  void callPaymentAPI(Map data, String token, double totalamount,
-      String referal, String myurl) {
-    print('TOKEEENNENNE callPaymentAPI : $token');
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) =>
-              PaymentSuccess(totalamount, referal, token, myurl)),
-    );
+  void callPaymentAPI(
+      double totalamount,
+      String cardId,
+      String stripeCustomerId,
+      double tipAmount,
+      String referal,
+      String myurl,
+      String token) async {
+    print('Flutter Module -TOKEEENNENNE callPaymentAPI : $token');
+    try {
+      final response = await api.chargeCard(
+          totalamount, cardId, stripeCustomerId, tipAmount);
+      print("Flutter Module -$response");
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                PaymentSuccess(totalamount, referal, token, myurl)),
+      );
+    } catch (e) {
+      print('Flutter Module -RAMAMAMAMMAMA ${e.toString()}');
+      displaydialog(
+          context,
+          'Payment Failed',
+          'Card details entered are invalid. Please enter valid card details and try again.',
+          '',
+          'Retry',
+          2);
+    }
+
     // final api = API();
     // api.dopayment(data, token).then((value) {
     //   print("rrrrrrrrrrrrrrr successss");
@@ -506,7 +550,7 @@ class RideDetailsState extends State<RideDetails> {
     var filename =
         await writeImageTemp(bytes!.buffer.asUint8List(), "signatureimage.png");
 
-    print('RAMAMMAMAMAMA file name::  $filename');
+    print('Flutter Module -RAMAMMAMAMAMA file name::  $filename');
     signatureFileUpload(filename);
   }
 
@@ -524,7 +568,7 @@ class RideDetailsState extends State<RideDetails> {
     //Get the response from the server
     var responseData = await response.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);
-    print(responseString);
+    print("Flutter Module -$responseString");
   }
 
   Future<File> writeToFile(ByteData data) async {
@@ -543,9 +587,9 @@ class RideDetailsState extends State<RideDetails> {
     final File fileForFirebase = File(value);
     final bytes = Io.File(fileForFirebase.path).readAsBytesSync();
     String base64Encode = base64.encode(bytes);
-    log('base64Encode:: \n');
-    log(base64Encode);
-    log('\nEnd Log');
+    print('Flutter Module -base64Encode:: \n');
+    print("Flutter Module -$base64Encode");
+    print('\nFlutter Module -End print');
   }
 
   Future<String> uint8ListTob64() async {
@@ -570,7 +614,7 @@ class RideDetailsState extends State<RideDetails> {
     final buffer = bytes?.buffer;
 
     var filename = await writeToFile(bytes!);
-    print('RAMAMMAMAMAMA file name::  $filename');
+    print('Flutter Module -RAMAMMAMAMAMA file name::  $filename');
     signatureFileUpload(filename);
   }
 }

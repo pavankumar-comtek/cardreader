@@ -2,6 +2,7 @@
 
 import 'dart:typed_data';
 
+import 'package:cardreader/api/API.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
@@ -471,10 +472,10 @@ class RideDetailsState1 extends State<RideDetails1> {
 
   void callPaymentAPI(Map data, String token, double totalamount,
       String referal, String myurl) {
-    print('TOKEEENNENNE callPaymentAPI : $token');
-    final api = API();
+    print('Flutter Module -TOKEEENNENNE callPaymentAPI : $token');
+
     api.dopayment(data, token).then((value) {
-      print("rrrrrrrrrrrrrrr successss");
+      print("Flutter Module -rrrrrrrrrrrrrrr successss");
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -483,7 +484,7 @@ class RideDetailsState1 extends State<RideDetails1> {
       );
       // loading = false;
     }).catchError((error) {
-      print('RAMAMAMAMMAMA ${error.toString()}');
+      print('Flutter Module -RAMAMAMAMMAMA ${error.toString()}');
       displaydialog(
           context,
           'Payment Failed',
@@ -513,6 +514,6 @@ class RideDetailsState1 extends State<RideDetails1> {
     //Get the response from the server
     var responseData = await response.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);
-    print(responseString);
+    print("Flutter Module -$responseString");
   }
 }

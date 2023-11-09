@@ -6,12 +6,11 @@ import 'package:flutter/services.dart';
 class CustomDeviceTile extends StatefulWidget {
   const CustomDeviceTile(
       {Key? key,
-        this.label,
-        this.maxLength,
-        this.deviceName,
-        this.onTap,
-        this.textStyle
-        })
+      this.label,
+      this.maxLength,
+      this.deviceName,
+      this.onTap,
+      this.textStyle})
       : super(key: key);
 
   final String? label;
@@ -45,15 +44,14 @@ class _CustomDeviceTileState extends State<CustomDeviceTile> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                   Expanded(
+                  Expanded(
                       child: Text(
-                        widget.label!,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      )),
+                    widget.label!,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  )),
                   const SizedBox(
                     width: 8,
                   ),
-
                 ],
               )),
       // child: Text(
@@ -64,41 +62,40 @@ class _CustomDeviceTileState extends State<CustomDeviceTile> {
       Stack(
         children: [
           // Separate container with identical height of text field which is placed behind the actual textfield
-          Container(
-            height: 56,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              // color: Theme.of(context).cardColor,
-              color: Colors.grey.shade200,
-              boxShadow: const [
-                BoxShadow(
-                  inset: true,
-                  color: Colors.white,
-                  blurRadius: 5, //extend the shadow
-                  offset: Offset(-1, -4),
-                ),
-                BoxShadow(
-                  inset: true,
-                  color: Color.fromRGBO(180, 186, 194, 0.9),
-                  blurRadius: 5, //extend the shadow
-                  offset: Offset(5, 5),
-                )
-              ],
-              // boxShadow: UIParameters.getShadow(context)
-            ),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-
-                onPressed: widget.onTap,
-                child: Text(widget.deviceName ?? "Device",
-
-                style: widget.textStyle)),
+          InkWell(
+            onTap: widget.onTap,
+            child: Container(
+              height: 56,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                // color: Theme.of(context).cardColor,
+                color: Colors.grey.shade200,
+                boxShadow: const [
+                  BoxShadow(
+                    inset: true,
+                    color: Colors.white,
+                    blurRadius: 5, //extend the shadow
+                    offset: Offset(-1, -4),
+                  ),
+                  BoxShadow(
+                    inset: true,
+                    color: Color.fromRGBO(180, 186, 194, 0.9),
+                    blurRadius: 5, //extend the shadow
+                    offset: Offset(5, 5),
+                  )
+                ],
+                // boxShadow: UIParameters.getShadow(context)
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                    onPressed: widget.onTap,
+                    child: Text(widget.deviceName ?? "Device",
+                        style: widget.textStyle)),
+              ),
             ),
           ),
-
-
         ],
       ),
     ]);

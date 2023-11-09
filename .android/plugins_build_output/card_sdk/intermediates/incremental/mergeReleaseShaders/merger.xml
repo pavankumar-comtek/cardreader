@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/ramatulasi/.pub-cache/git/card_sdk-d3cf1372e942c94b36be5db44109b3421d4546e3/android/src/main/shaders"/></dataSet><dataSet config="release" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/ramatulasi/.pub-cache/git/card_sdk-d3cf1372e942c94b36be5db44109b3421d4546e3/android/src/release/shaders"/></dataSet></merger>

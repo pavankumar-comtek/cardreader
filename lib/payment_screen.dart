@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cardreader/models/cardtoken_response.dart';
 import 'package:easy_separator/easy_separator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:credit_card_type_detector/credit_card_type_detector.dart';
 import 'package:cardreader/ride_details_screen.dart';
 import 'package:cardreader/api/API.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'Common/custom_button.dart';
 import 'Common/custom_textfield.dart';
@@ -45,6 +47,9 @@ class PaymentState extends State<Payment> {
   TextEditingController textfieldcontroller =
       TextEditingController(text: '\$0.0');
 
+  // CardEditController cardEditController = CardEditController();
+  CardFieldInputDetails? cardFieldInputDetails;
+
   @override
   void initState() {
     // storedata();
@@ -61,17 +66,75 @@ class PaymentState extends State<Payment> {
     cardNumberController.text = widget.cardNumber;
     cardHolderNameController.text = widget.cardHolderName;
     cardHolderName = widget.cardHolderName;
+    print("Flutter Module -Expriry Date :: ${widget.expiryDate}");
     expiryDateController.text = widget.expiryDate != ""
         ? widget.expiryDate.substring(2) +
             "/" +
             widget.expiryDate.substring(0, 2)
         : "";
-    log("expiry Date :: ${expiryDateController.text}");
+    print("Flutter Module -expiry Date :: ${expiryDateController.text}");
     expiryDate = widget.expiryDate != ""
         ? widget.expiryDate.substring(2) +
             "/" +
             widget.expiryDate.substring(0, 2)
         : "";
+
+    //generateStripeToken();
+  }
+
+  void generateStripeToken(CardDetails cardDetails) async {
+    try {
+      // log("Card Details are:: ${cardEditController.details.number}");
+
+      await Stripe.instance.dangerouslyUpdateCardDetails(cardDetails);
+      CreateTokenParams createTokenParams = const CreateTokenParams.card(
+          params: CardTokenParams(type: TokenType.Card));
+      TokenData token = await Stripe.instance.createToken(createTokenParams);
+      print("Flutter Module  -Stripe token generated:: ${token.id}");
+      //below code sends stripe token to backend.
+      generateToken(token.id);
+      // api.chargeCardConvinienceFees(amount, token.id).then((value) {
+      //    callGetCountryCode(cardNumber.substring(0, 6), token.id,
+      //    value['convenienceFee'],value['appCommission'],value['operatorCommission'],value['chargeAmount']);
+      // });
+
+      //  generateToken(token.id);
+    } catch (e) {
+      print("Flutter Module -Error in generating Stripe Token $e");
+      rethrow;
+    }
+  }
+
+  //generate Token API
+  Future<void> generateToken(String cardToken) async {
+    print("Flutter Module -authToken is ${api.authToken}");
+    try {
+      final response =
+          await api.generateToken(widget.cardHolderName, cardToken);
+
+      print("Flutter Module -Token generated successfully");
+      //  print("Flutter Module -Token is ${CardTokenResponse.fromJson(response)}");
+      // await api.chargeCardConvinienceFees(100, authToken);
+      CardTokenResponse cardTokenResponse =
+          CardTokenResponse.fromJson(response);
+      print("Flutter Module -Token is ${cardTokenResponse}");
+      api.chargeCardConvinienceFees(amount).then((value) {
+        callGetCountryCode(
+            cardNumber.substring(0, 6),
+            cardToken,
+            value['convienceFee'],
+            value['appCommission'],
+            value['operatorCommission'],
+            value['chargeAmount'],
+            cardTokenResponse);
+      }).catchError((e) {
+        print("Flutter Module -Error in getting Convenience Fees $e");
+      });
+      // await api.chargeCard(1, cardTokenResponse.data.cards[0].id,
+      //     cardTokenResponse.data.cards[0].customer, 10, authToken);
+    } catch (e) {
+      print("Flutter Module -Error in generating Token $e");
+    }
   }
 
   @override
@@ -102,6 +165,22 @@ class PaymentState extends State<Payment> {
                                           return const SizedBox(height: 20);
                                         },
                                         children: [
+                                          // Visibility(
+                                          //   child: CardField(
+                                          //     controller: cardEditController,
+                                          //     decoration: const InputDecoration(
+                                          //       labelText: 'Card Number',
+                                          //     ),
+                                          //     onCardChanged:
+                                          //         (CardFieldInputDetails?
+                                          //             card) {
+                                          //       setState(() {
+                                          //         cardFieldInputDetails = card;
+                                          //       });
+                                          //     },
+                                          //   ),
+                                          //   visible: false,
+                                          // ),
                                           Row(
                                             children: [
                                               Align(
@@ -111,7 +190,7 @@ class PaymentState extends State<Payment> {
                                                       Icons.arrow_back),
                                                   onPressed: () {
                                                     print(
-                                                        'RAMAMMAMAMA Exit the APP 22');
+                                                        'Flutter Module -RAMAMMAMAMA Exit the APP 22');
                                                     // Navigator.push(
                                                     //   context,
                                                     //   MaterialPageRoute(
@@ -443,14 +522,31 @@ class PaymentState extends State<Payment> {
                                           CustomButton(
                                               label: 'Continue',
                                               onTap: () async {
+                                                print(
+                                                    "Flutter Module -Clicked! ${formKey.currentState!.validate()}}");
                                                 if (formKey.currentState!
                                                     .validate()) {
                                                   print(
-                                                      'RAMAMMAMAMA cardNumber $cardNumber');
-                                                  callGetCountryCode(cardNumber
-                                                      .substring(0, 6));
+                                                      'Flutter Module -RAMAMMAMAMA cardNumber $cardNumber cardHolderName $cardHolderName expiryDate ${int.parse(expiryDate.substring(0, 2))}/${expiryDate.substring(3)} cvvCode $cvvCode');
+
+                                                  generateStripeToken(CardDetails(
+                                                      number: cardNumber,
+                                                      expirationMonth:
+                                                          expiryDate != ""
+                                                              ? int.parse(
+                                                                  expiryDate
+                                                                      .substring(
+                                                                          0, 2))
+                                                              : 12,
+                                                      expirationYear: expiryDate !=
+                                                              ""
+                                                          ? int.parse(
+                                                              "20${expiryDate.substring(3)}")
+                                                          : 2025,
+                                                      cvc: cvvCode));
                                                 } else {
-                                                  print('invalid!');
+                                                  print(
+                                                      'Flutter Module -invalid!');
                                                 }
                                               })
                                         ],
@@ -468,41 +564,52 @@ class PaymentState extends State<Payment> {
     });
   }
 
-  void callGetCountryCode(String numbers) {
-    print('RAMAMAMAMAM callGetCountryCode : $numbers');
-    final api = API();
+  void callGetCountryCode(
+      String numbers,
+      String stripeCardToken,
+      num convenienceFee,
+      num appCommission,
+      num operatorCommission,
+      num chargeAmount,
+      CardTokenResponse cardTokenResponse) {
+    print('Flutter Module -RAMAMAMAMAM callGetCountryCode : $numbers');
     api.users(numbers).then((value) {
       Map<String, dynamic> details = value;
       String countrycode = details['country']['alpha2'].toString();
-      print('RAMAMAMAMAM countrycode : $countrycode');
+      print('Flutter Module -RAMAMAMAMAM countrycode : $countrycode');
       var splited = expiryDate.split('/');
       String expMonth = splited.first;
       String expYear = splited.last;
       var cardtype = detectCCType(cardNumber);
-      print('RAMAMMAMAMA amount ${amount}');
+      print('Flutter Module -RAMAMMAMAMA amount ${amount}');
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => RideDetails(
-                  widget.token,
-                  amount,
-                  cardHolderName,
-                  lastName,
-                  //New change
-                  //cardtype.name
-                  cardtype.first.type,
-                  countrycode,
-                  cardNumber,
-                  cvvCode,
-                  expMonth,
-                  expYear,
-                  zipCode,
-                  widget.referal,
-                  widget.myurl,
-                )),
+                widget.token,
+                amount,
+                convenienceFee.toDouble(),
+                appCommission.toDouble(),
+                operatorCommission.toDouble(),
+                chargeAmount.toDouble(),
+                cardHolderName,
+                lastName,
+                //New change
+                //cardtype.name
+                cardtype.first.type,
+                countrycode,
+                cardNumber,
+                cvvCode,
+                expMonth,
+                expYear,
+                zipCode,
+                widget.referal,
+                widget.myurl,
+                stripeCardToken,
+                cardTokenResponse)),
       );
     }).catchError((error) {
-      print('Error ${error.toString()}');
+      print('Flutter Module -Error ${error.toString()}');
       displaydialog(
           context,
           'Payment Failed',
