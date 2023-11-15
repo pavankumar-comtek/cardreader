@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cardreader/models/cardtoken_response.dart';
+import 'package:cardreader/utils/ui_parameters.dart';
 import 'package:easy_separator/easy_separator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -108,6 +109,7 @@ class PaymentState extends State<Payment> {
   //generate Token API
   Future<void> generateToken(String cardToken) async {
     print("Flutter Module -authToken is ${api.authToken}");
+    displayLoading(context, "Verifying your card information..");
     try {
       final response =
           await api.generateToken(widget.cardHolderName, cardToken);
@@ -119,6 +121,7 @@ class PaymentState extends State<Payment> {
           CardTokenResponse.fromJson(response);
       print("Flutter Module -Token is ${cardTokenResponse}");
       api.chargeCardConvinienceFees(amount).then((value) {
+        Navigator.of(context).pop();
         callGetCountryCode(
             cardNumber.substring(0, 6),
             cardToken,
@@ -129,11 +132,13 @@ class PaymentState extends State<Payment> {
             cardTokenResponse);
       }).catchError((e) {
         print("Flutter Module -Error in getting Convenience Fees $e");
+        Navigator.of(context).pop();
       });
       // await api.chargeCard(1, cardTokenResponse.data.cards[0].id,
       //     cardTokenResponse.data.cards[0].customer, 10, authToken);
     } catch (e) {
       print("Flutter Module -Error in generating Token $e");
+      Navigator.of(Get.overlayContext!).pop();
     }
   }
 
@@ -201,7 +206,7 @@ class PaymentState extends State<Payment> {
                                                   },
                                                 ),
                                               ),
-                                              const Expanded(
+                                              Expanded(
                                                   child: Align(
                                                       alignment:
                                                           Alignment.center,
@@ -211,8 +216,14 @@ class PaymentState extends State<Payment> {
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 18,
+                                                          color:
+                                                              Color(0xFF2B3951),
+                                                          fontSize: const RD(
+                                                                  d: 20,
+                                                                  t: 20,
+                                                                  m: 22,
+                                                                  s: 22)
+                                                              .get(context),
                                                           fontFamily:
                                                               'Urbanist',
                                                           fontWeight:

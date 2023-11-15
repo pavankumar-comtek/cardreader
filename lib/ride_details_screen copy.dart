@@ -1,12 +1,11 @@
 // ignore_for_file: sort_child_properties_last
 
 import 'dart:typed_data';
-
+import 'api/API.dart';
 import 'package:cardreader/api/API.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:cardreader/Api/API.dart';
 import 'package:cardreader/Common/dailog.dart';
 import 'package:cardreader/payment_success_screen.dart';
 
@@ -473,7 +472,7 @@ class RideDetailsState1 extends State<RideDetails1> {
   void callPaymentAPI(Map data, String token, double totalamount,
       String referal, String myurl) {
     print('Flutter Module -TOKEEENNENNE callPaymentAPI : $token');
-
+    
     api.dopayment(data, token).then((value) {
       print("Flutter Module -rrrrrrrrrrrrrrr successss");
       Navigator.push(

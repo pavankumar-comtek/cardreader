@@ -1,3 +1,4 @@
+import 'package:cardreader/utils/ui_parameters.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_button.dart';
@@ -94,4 +95,50 @@ Future<void> displayDialog(
       );
     },
   );
+}
+
+void displayLoading(BuildContext context, String message) {
+  showDialog(
+      context: context,
+      builder: (_) {
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+          backgroundColor: Color(0xFFf0F2F5),
+          child: ShowProgressLoading(
+            message: message,
+          ),
+        );
+      });
+}
+
+class ShowProgressLoading extends StatelessWidget {
+  const ShowProgressLoading({Key? key, this.message}) : super(key: key);
+  final String? message;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: UIParameters.contentPadding,
+        decoration: const BoxDecoration(color: Colors.white),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(
+              color: Colors.teal[800],
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Expanded(
+              child: Text(
+                message ?? "Loading",
+                overflow: TextOverflow.clip,
+              ),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+          ],
+        ));
+  }
 }

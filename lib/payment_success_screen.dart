@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cardreader/utils/common_scaffold.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
@@ -50,13 +51,9 @@ class PaymentSuccessState extends State<PaymentSuccess> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return CommonScaffold(
       title: 'Do Pay',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
+      body: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
           decoration: const BoxDecoration(

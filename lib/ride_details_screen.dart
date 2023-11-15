@@ -487,10 +487,12 @@ class RideDetailsState extends State<RideDetails> {
       String myurl,
       String token) async {
     print('Flutter Module -TOKEEENNENNE callPaymentAPI : $token');
+    displayLoading(context, "Hold on while we process your payment...");
     try {
       final response = await api.chargeCard(
           totalamount, cardId, stripeCustomerId, tipAmount);
       print("Flutter Module -$response");
+      Navigator.of(context).pop();
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -498,14 +500,11 @@ class RideDetailsState extends State<RideDetails> {
                 PaymentSuccess(totalamount, referal, token, myurl)),
       );
     } catch (e) {
+      Navigator.of(context).pop();
       print('Flutter Module -RAMAMAMAMMAMA ${e.toString()}');
+
       displaydialog(
-          context,
-          'Payment Failed',
-          'Card details entered are invalid. Please enter valid card details and try again.',
-          '',
-          'Retry',
-          2);
+          context, 'Payment Failed', 'We ran into $e', '', 'Retry', 2);
     }
 
     // final api = API();
