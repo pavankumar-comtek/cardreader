@@ -25,9 +25,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //Stripe.publishableKey = "pk_test_nVWvz0F2wXEf6pIjG0TSmIRW";
-  Stripe.publishableKey = "pk_live_vddmhz2nlIkrX4jjpEQ8bMyw";
-  //Stripe.merchantIdentifier = "";
+  Stripe.publishableKey = "pk_test_nVWvz0F2wXEf6pIjG0TSmIRW";
+  //Stripe.publishableKey = "pk_live_vddmhz2nlIkrX4jjpEQ8bMyw";
+  //Stripe.merchantIdentifier = "";s
   await Stripe.instance.applySettings();
   return runApp(chooseWidget(window.defaultRouteName));
 }
