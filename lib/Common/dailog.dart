@@ -100,6 +100,7 @@ Future<void> displayDialog(
 void displayLoading(BuildContext context, String message) {
   showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_) {
         return Dialog(
           shape:

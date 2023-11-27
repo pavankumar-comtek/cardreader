@@ -29,7 +29,7 @@ https://developer.android.com/about/versions/12/features/bluetooth-permissions -
         android:label="cardreader"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name=".MainActivity"
+            android:name="io.flutter.embedding.android.FlutterFragmentActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat"
             android:exported="true"

@@ -1,3 +1,4 @@
+import 'package:cardreader/utils/color_constant.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter/services.dart';
@@ -85,7 +86,9 @@ class _CustomTextFormFieldRowState extends State<CustomTextFormFieldRow> {
                         widget.lableIcon != null
                             ? Text(
                                 widget.label!,
-                                style: const TextStyle(
+                                style: TextStyle(
+                                    color: ColorConstant.bluegray600,
+                                    fontFamily: 'Urbanist',
                                     fontWeight: FontWeight.w700),
                               )
                             : Expanded(
@@ -93,7 +96,9 @@ class _CustomTextFormFieldRowState extends State<CustomTextFormFieldRow> {
                                     alignment: Alignment.topLeft,
                                     child: Text(
                                       widget.label!,
-                                      style: const TextStyle(
+                                      style: TextStyle(
+                                          color: ColorConstant.bluegray600,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w700),
                                     ))),
                         const SizedBox(
@@ -156,6 +161,13 @@ class _CustomTextFormFieldRowState extends State<CustomTextFormFieldRow> {
                         // style: textformFieldStyle(context),
                         textDirection: TextDirection.ltr,
                         textAlign: TextAlign.right,
+                        style: TextStyle(
+                          color: ColorConstant.bluegray600,
+                          fontSize: 16,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w500,
+                          height: 1.00,
+                        ),
                         keyboardType: widget.textInputType,
                         controller: widget.controller,
                         enabled: widget.isEnabled,
@@ -173,6 +185,7 @@ class _CustomTextFormFieldRowState extends State<CustomTextFormFieldRow> {
 
                         initialValue: widget.initialValue,
                         expands: false,
+                        cursorColor: ColorConstant.bluegray400,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           fillColor: Colors.transparent,
@@ -272,7 +285,7 @@ class _CustomTextFormFieldRowState extends State<CustomTextFormFieldRow> {
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                              color: Colors.grey.shade700,
+                              color: ColorConstant.bluegray600,
                               // fontSize: 16,
                               // fontFamily: 'Urbanist',
                               fontWeight: FontWeight.w700,
@@ -338,7 +351,8 @@ class _CustomTextFormFieldRowState extends State<CustomTextFormFieldRow> {
                       '18%',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.grey.shade700,
+                        color: ColorConstant.bluegray600,
+                        fontFamily: 'Urbanist',
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -381,7 +395,8 @@ class _CustomTextFormFieldRowState extends State<CustomTextFormFieldRow> {
                         '20%',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.grey.shade700,
+                          color: ColorConstant.bluegray600,
+                          fontFamily: 'Urbanist',
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -423,7 +438,8 @@ class _CustomTextFormFieldRowState extends State<CustomTextFormFieldRow> {
                         '25%',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.grey.shade700,
+                          color: ColorConstant.bluegray600,
+                          fontFamily: 'Urbanist',
                           fontWeight: FontWeight.w700,
                         ),
                       ),

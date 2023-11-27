@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'dart:ui';
 import 'package:cardreader/api/API.dart';
-import 'package:cardreader/models/cardtoken_response.dart';
 import 'package:cardreader/payment_screen.dart';
 import 'package:cardreader/screens/status_screen.dart';
 import 'package:cardreader/utils/common_device_tile.dart';
 import 'package:cardreader/utils/common_scaffold.dart';
 import 'package:cardreader/utils/custom_button.dart';
 import 'package:cardreader/utils/ui_parameters.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:card_sdk/M6pBleBean.dart';
 import 'package:card_sdk/M6pBleControl.dart';
@@ -20,41 +17,35 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey = "pk_test_nVWvz0F2wXEf6pIjG0TSmIRW";
   //Stripe.publishableKey = "pk_live_vddmhz2nlIkrX4jjpEQ8bMyw";
-  //Stripe.merchantIdentifier = "";s
   await Stripe.instance.applySettings();
   return runApp(chooseWidget(window.defaultRouteName));
 }
 
-// Set up a MethodChannel
-const platform = const MethodChannel('com.rydeum.partner/result');
 Widget chooseWidget(String route) {
-  // switch (route) {
-  //   case '/route':
-  //     return MyApp(authToken: route.split("/").last);
-
-  //   default:
-  //     return MyApp(authToken: "",);
-  // }
-  // route =
-  //     "/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzI5ZDM2MDQyNDBiZTVkMGEzMWFiNGMiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo0ODQzLCJpYXQiOjE2OTk1MjE5MTYsImV4cCI6MTY5OTYwODMxNiwic3ViIjoicHJvdmlkZXIifQ.JNhF65Qv_XWskdwoFBetsOrbAPjURQ4S9cv--gk52R0";
+  // String jsonData = '{"authtoken": "123456789", "referralcode": "ABCD123"}';
+  // Map<String, dynamic> jsonMap = jsonDecode(jsonData);
+  route =
+      "/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzI5ZDM2MDQyNDBiZTVkMGEzMWFiNGMiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo5OTY2LCJpYXQiOjE3MDEwNjc4ODUsImV4cCI6MTcwMTE1NDI4NSwic3ViIjoicHJvdmlkZXIifQ.gYCSpSVV868yv6htFw-3fUdErpKPv7SRMq2riMPB4XA";
+  //Setting authToken Received from Native
   api.authToken = route.split("/").last == ""
       ? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIxbWFoZXNoZEBnbWFpbC5jb20iLCJzdWIiOiI2MjBhNTFkN2UxNzg1NjFkYWI1ZjM2ZTUiLCJpZCI6IjYyMGE1MWQ3ZTE3ODU2MWRhYjVmMzZlNSIsImdyYW50VHlwZSI6ImFjY2VzcyIsImlhdCI6MTY0NTIwMzc4NSwiZXhwIjoxNjQ2MDQzNzg1fQ.xYLSg6wJypAybSHhmqoAygV5xJJGR0UngJlv7F7Ooog"
       : route.split("/").last;
   print(
       "Flutter Module  -RAMAMMA Route from native is $route  and split is ${route.split("/").last}");
-  return MyApp(authToken: route.split("/").last);
+  return const MyApp();
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.authToken});
-  final String authToken;
+  const MyApp({
+    super.key,
+  });
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -72,7 +63,7 @@ class MyApp extends StatelessWidget {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Card Reader Check'),
     );
   }
 }
@@ -103,27 +94,9 @@ class _MyHomePageState extends State<MyHomePage> {
   BleControl bleControl = BleControl();
   FlutterBlue flutterBlue = FlutterBlue.instance;
   late StreamSubscription<BluetoothState> stateSubscription;
-  CardEditController cardEditController = CardEditController(
-    initialDetails: CardFieldInputDetails(
-      complete: true,
-      last4: "4242",
-      number: "4242424242424242",
-      expiryMonth: 12,
-      expiryYear: 2025,
-      brand: "Visa",
-      cvc: '123',
-      postalCode: '500084',
-      validCVC: CardValidationState.Valid,
-      validExpiryDate: CardValidationState.Valid,
-      validNumber: CardValidationState.Valid,
-    ),
-  );
-  CardFieldInputDetails? cardFieldInputDetails;
-  String? token = '';
 
   @override
   void initState() {
-    platform.setMethodCallHandler(_receiveFromHost);
     // TODO: implement initState
     super.initState();
 
@@ -153,28 +126,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> _receiveFromHost(MethodCall call) async {
-    var jData;
-
-    try {
-      if (call.method == "getToken") {
-        final String data = call.arguments;
-        jData = await jsonDecode(data);
-      }
-    } on PlatformException catch (error) {
-      print("Flutter Module -$error");
-    }
-    setState(() {
-      token = jData['token'];
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Token :: $token  ${api.authToken}'),
-      ),
-    );
-  }
-
   Future<void> requestBluetoothPermission() async {
     if (await Permission.bluetooth.request().isGranted) {
       // Permission is granted, proceed with Bluetooth operations
@@ -195,16 +146,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> checkBluetoothAvailability() async {
     bool isBluetoothAvailable = await flutterBlue.isOn;
     if (isBluetoothAvailable) {
-      //   // Bluetooth is available, proceed with your operations
-      //   startSearch();
-      // } else {
-      //   // Bluetooth is not available, handle it (show a dialog, ask user to enable it manually, etc.)
-      //   // For now, we'll just print a message
-      //   if (kDebugMode) {
-      //     print('Flutter Module -Bluetooth is not available.');
-      //   }
-      // }
-
       //Check permission for bluetooth scan
       if (await Permission.bluetoothScan.request().isGranted) {
         // Permission is granted, proceed with Bluetooth operations
@@ -238,23 +179,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
     //List<ItronBleDevice> services = await device.discoverServices();
     if (isConnect) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return StatusScreen(deviceName: device.name ?? "Bluetooth Device");
-      }));
+      if (context.mounted) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return StatusScreen(deviceName: device.name ?? "Bluetooth Device");
+        }));
+      }
     } else {
       Fluttertoast.showToast(msg: 'Device not Connected');
     }
   }
 
   Widget buildItem(BuildContext context, int index) {
-    // return TextButton(
-    //     onPressed: () {
-    //       print(index);
-    //       M6pBleDevice device = blueList[index];
-    //       _blueConnect(device);
-    //     },
-    //     child: Text('${blueList[index].name}\n${blueList[index].UUID}'));
-
     return CustomDeviceTile(
       onTap: () async {
         print("Flutter Module - Bluetooth Device index::$index");
@@ -321,14 +256,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> checkBluetoothPermissionAndAvailability() async {
     await requestBluetoothPermission();
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    // startSearch();
-    //generateStripeToken();
   }
 
   @override

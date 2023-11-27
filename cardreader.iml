@@ -9,6 +9,45 @@
       <excludeFolder url="file://$MODULE_DIR$/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue_plus/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue_plus/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue_plus/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/stripe_ios/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/stripe_ios/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/stripe_ios/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/card_sdk/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/card_sdk/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/card_sdk/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/path_provider_foundation/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/path_provider_foundation/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/path_provider_foundation/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue_plus/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue_plus/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue_plus/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/card_sdk/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/card_sdk/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/card_sdk/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/permission_handler_apple/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/permission_handler_apple/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/permission_handler_apple/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/fluttertoast/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/fluttertoast/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/fluttertoast/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/permission_handler_apple/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/permission_handler_apple/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/permission_handler_apple/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/flutter_blue/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/fluttertoast/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/fluttertoast/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/fluttertoast/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/path_provider_foundation/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/path_provider_foundation/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.ios/.symlinks/plugins/path_provider_foundation/example/.pub" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />

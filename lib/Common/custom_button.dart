@@ -48,7 +48,7 @@ class CustomButton extends StatelessWidget {
                     color: (isEnabled ?? true)
                         ? Theme.of(context).colorScheme.onBackground
                         : Theme.of(context).focusColor.withOpacity(0.3),
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                     fontFamily: 'Urbanist',
                     fontSize: 16,
                     // height: 1.5
