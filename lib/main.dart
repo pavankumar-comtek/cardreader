@@ -31,7 +31,7 @@ Widget chooseWidget(String route) {
   // String jsonData = '{"authtoken": "123456789", "referralcode": "ABCD123"}';
   // Map<String, dynamic> jsonMap = jsonDecode(jsonData);
   route =
-      "/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzI5ZDM2MDQyNDBiZTVkMGEzMWFiNGMiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo5OTY2LCJpYXQiOjE3MDEwNjc4ODUsImV4cCI6MTcwMTE1NDI4NSwic3ViIjoicHJvdmlkZXIifQ.gYCSpSVV868yv6htFw-3fUdErpKPv7SRMq2riMPB4XA";
+      "/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzI5ZDM2MDQyNDBiZTVkMGEzMWFiNGMiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo0Mzg4LCJpYXQiOjE3MDE4NjI0NzYsImV4cCI6MTcwMTk0ODg3Niwic3ViIjoicHJvdmlkZXIifQ.dlHH-Zk9lL0UiMw2q2kJWyk-6QZK62awJg5DamKycBY";
   //Setting authToken Received from Native
   api.authToken = route.split("/").last == ""
       ? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIxbWFoZXNoZEBnbWFpbC5jb20iLCJzdWIiOiI2MjBhNTFkN2UxNzg1NjFkYWI1ZjM2ZTUiLCJpZCI6IjYyMGE1MWQ3ZTE3ODU2MWRhYjVmMzZlNSIsImdyYW50VHlwZSI6ImFjY2VzcyIsImlhdCI6MTY0NTIwMzc4NSwiZXhwIjoxNjQ2MDQzNzg1fQ.xYLSg6wJypAybSHhmqoAygV5xJJGR0UngJlv7F7Ooog"

@@ -1,6 +1,0 @@
-framework module card_sdk {
-  umbrella header "card_sdk-umbrella.h"
-
-  export *
-  module * { export * }
-}

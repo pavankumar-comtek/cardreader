@@ -22,7 +22,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: d3cf1372e942c94b36be5db44109b3421d4546e3
+      resolved-ref: c3e3c8cabdf08ee4225389fff0669aa9db3fce46
       url: "git@github.com:pavankumar-comtek/card_sdk.git"
     source: git
     version: "0.0.3"
