@@ -479,7 +479,7 @@ class RideDetailsState1 extends State<RideDetails1> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                PaymentSuccess(totalamount, referal, token, myurl)),
+                PaymentSuccess(totalamount, referal, myurl)),
       );
       // loading = false;
     }).catchError((error) {

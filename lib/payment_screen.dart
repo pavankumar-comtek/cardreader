@@ -17,9 +17,9 @@ import 'Common/dailog.dart';
 import 'finish_screen.dart';
 
 class Payment extends StatefulWidget {
-  String myurl, referal, token, cardNumber, expiryDate, cardHolderName;
-  Payment(this.myurl, this.referal, this.token, this.cardNumber,
-      this.expiryDate, this.cardHolderName,
+  String myurl, referal, cardNumber, expiryDate, cardHolderName;
+  Payment(this.myurl, this.referal, this.cardNumber, this.expiryDate,
+      this.cardHolderName,
       {Key? key})
       : super(key: key);
   @override
@@ -111,8 +111,8 @@ class PaymentState extends State<Payment> {
     print("Flutter Module -authToken is ${api.authToken}");
     displayLoading(context, "Verifying your card information..");
     try {
-      final response =
-          await api.generateToken(widget.cardHolderName, cardToken);
+      print("Flutter Module -Generating Token  $cardHolderName $cardToken");
+      final response = await api.generateToken(cardHolderName, cardToken);
 
       print("Flutter Module -Token generated successfully");
       //  print("Flutter Module -Token is ${CardTokenResponse.fromJson(response)}");
@@ -597,7 +597,6 @@ class PaymentState extends State<Payment> {
         context,
         MaterialPageRoute(
             builder: (context) => RideDetails(
-                widget.token,
                 amount,
                 convenienceFee.toDouble(),
                 appCommission.toDouble(),

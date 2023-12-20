@@ -12,8 +12,7 @@ import 'package:cardreader/utils/ui_parameters.dart';
 import 'package:flutter/material.dart';
 import 'package:card_sdk/M6pBleBean.dart';
 import 'package:card_sdk/M6pBleControl.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_blue/flutter_blue.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -21,8 +20,10 @@ import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey = "pk_test_nVWvz0F2wXEf6pIjG0TSmIRW";
+  //Stripe.publishableKey = "pk_test_nVWvz0F2wXEf6pIjG0TSmIRW";
   //Stripe.publishableKey = "pk_live_vddmhz2nlIkrX4jjpEQ8bMyw";
+  Stripe.publishableKey =
+      "pk_live_51JGMznHsnOnHfsup1BXyIjVQJX7ODI8Uft6Kcnl2SoeJ6pu14Bqz1vS6X79sVUFu8ymmuCUJ4eTeAWagUP2uovVj00y2ISsnKz";
   await Stripe.instance.applySettings();
   return runApp(chooseWidget(window.defaultRouteName));
 }
@@ -30,8 +31,8 @@ void main() async {
 Widget chooseWidget(String route) {
   // String jsonData = '{"authtoken": "123456789", "referralcode": "ABCD123"}';
   // Map<String, dynamic> jsonMap = jsonDecode(jsonData);
-  route =
-      "/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzI5ZDM2MDQyNDBiZTVkMGEzMWFiNGMiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo0Mzg4LCJpYXQiOjE3MDE4NjI0NzYsImV4cCI6MTcwMTk0ODg3Niwic3ViIjoicHJvdmlkZXIifQ.dlHH-Zk9lL0UiMw2q2kJWyk-6QZK62awJg5DamKycBY";
+  // route =
+  //     "/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzI5ZDM2MDQyNDBiZTVkMGEzMWFiNGMiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo0NzUzLCJpYXQiOjE3MDIyNzg1MDYsImV4cCI6MTcwMjM2NDkwNiwic3ViIjoicHJvdmlkZXIifQ.kIsNNFSlcpXimPJ9f9UyF4ftlPr3FavUKjzCHWWJfQo";
   //Setting authToken Received from Native
   api.authToken = route.split("/").last == ""
       ? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIxbWFoZXNoZEBnbWFpbC5jb20iLCJzdWIiOiI2MjBhNTFkN2UxNzg1NjFkYWI1ZjM2ZTUiLCJpZCI6IjYyMGE1MWQ3ZTE3ODU2MWRhYjVmMzZlNSIsImdyYW50VHlwZSI6ImFjY2VzcyIsImlhdCI6MTY0NTIwMzc4NSwiZXhwIjoxNjQ2MDQzNzg1fQ.xYLSg6wJypAybSHhmqoAygV5xJJGR0UngJlv7F7Ooog"
@@ -92,16 +93,17 @@ class _MyHomePageState extends State<MyHomePage> {
       'Bluetooth is OFF,Please switch on Bluetooth to Continue';
   bool isBluetoothOn = false;
   BleControl bleControl = BleControl();
-  FlutterBlue flutterBlue = FlutterBlue.instance;
-  late StreamSubscription<BluetoothState> stateSubscription;
+  //FlutterBluePlus flutterBlue = FlutterBluePlus();
+  late StreamSubscription<BluetoothAdapterState> stateSubscription;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    stateSubscription = flutterBlue.state.listen((BluetoothState state) {
-      if (state == BluetoothState.on) {
+    stateSubscription = FlutterBluePlus.adapterState.listen((results) {
+      print("ScanResults $results");
+      if (results == BluetoothAdapterState.on) {
         // Bluetooth is on, start scanning
         setState(() {
           bluetoothStatus = '';
@@ -126,6 +128,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  
+ @override
+  void dispose() {
+    super.dispose();
+    stateSubscription.cancel();
+  }
+
   Future<void> requestBluetoothPermission() async {
     if (await Permission.bluetooth.request().isGranted) {
       // Permission is granted, proceed with Bluetooth operations
@@ -144,7 +153,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> checkBluetoothAvailability() async {
-    bool isBluetoothAvailable = await flutterBlue.isOn;
+    bool isBluetoothAvailable =
+        await FlutterBluePlus.adapterState.first == BluetoothAdapterState.on;
     if (isBluetoothAvailable) {
       //Check permission for bluetooth scan
       if (await Permission.bluetoothScan.request().isGranted) {
@@ -194,7 +204,8 @@ class _MyHomePageState extends State<MyHomePage> {
       onTap: () async {
         print("Flutter Module - Bluetooth Device index::$index");
         M6pBleDevice device = blueList[index];
-        bool isBluetoothAvailable = await flutterBlue.isOn;
+        bool isBluetoothAvailable = await FlutterBluePlus.adapterState.first ==
+            BluetoothAdapterState.on;
         if (isBluetoothAvailable) {
           _blueConnect(device);
         } else {
@@ -367,12 +378,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   label: '(Or) Enter Card Details Manually',
                   onTap: () {
                     Get.to(() => Payment(
-                        'https://pay.rydeum.info',
-                        'RA4BR',
-                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjBmMzQxYzNiMjZiNzVlNmE2MDdlY2UiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo4ODQ5LCJpYXQiOjE2NzM0MjAzNTksImV4cCI6MTY3MzUwNjc1OSwic3ViIjoicHJvdmlkZXIifQ.r6WFmK0kqfBJmMe50VgyDuuIuWDymPIsF2PzMlESIew',
-                        "",
-                        "",
-                        ""));
+                        'https://pay.rydeum.info', 'RA4BR', "", "", ""));
                   },
                 ),
               ),

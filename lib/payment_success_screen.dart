@@ -14,8 +14,8 @@ import 'finish_screen.dart';
 
 class PaymentSuccess extends StatefulWidget {
   double totalamount;
-  String referal, token, myurl;
-  PaymentSuccess(this.totalamount, this.referal, this.token, this.myurl,
+  String referal, myurl;
+  PaymentSuccess(this.totalamount, this.referal, this.myurl,
       {Key? key})
       : super(key: key);
 

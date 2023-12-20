@@ -30,7 +30,7 @@ import 'package:path/path.dart' as path;
 class RideDetails extends StatefulWidget {
   double amount, convienceFee, appCommission, operatorCommission, chargeAmount;
 
-  String token,
+  String 
       firstname,
       lastname,
       cardtype,
@@ -46,7 +46,7 @@ class RideDetails extends StatefulWidget {
   CardTokenResponse cardTokenResponse;
 
   RideDetails(
-      this.token,
+      
       this.amount,
       this.convienceFee,
       this.appCommission,
@@ -396,10 +396,12 @@ class RideDetailsState extends State<RideDetails> {
                       ))));
         }),
         floatingActionButton: Container(
-          height: RD(d: 48, t: 48, m: 48, s: 36).get(context),
+          height: RD(d: 48, t: 48, m: 48, s: 52).get(context),
           margin: const EdgeInsets.only(left: 16, top: 10, right: 16),
           child: CustomButton(
               label: 'Confirm Payment',
+              fontSize:
+                  (RD(d: 48, t: 48, m: 48, s: 52).get(context) ?? 32) / 3.2,
               onTap: () async {
                 if (formKey.currentState!.validate()) {
                   if (isSignatureDraw) {
@@ -427,7 +429,7 @@ class RideDetailsState extends State<RideDetails> {
                         tip,
                         widget.referal,
                         widget.myurl,
-                        widget.token);
+                        );
                   } else {
                     displaydialog(context, 'E-Sign',
                         'Please Sign before payment', '', 'OK', 1);
@@ -447,8 +449,8 @@ class RideDetailsState extends State<RideDetails> {
       double tipAmount,
       String referal,
       String myurl,
-      String token) async {
-    print('Flutter Module -TOKEEENNENNE callPaymentAPI : $token');
+      ) async {
+   //print('Flutter Module -TOKEEENNENNE callPaymentAPI : $token');
     displayLoading(context, "Hold on while we process your payment...");
     try {
       final response = await api.chargeCard(
@@ -459,7 +461,7 @@ class RideDetailsState extends State<RideDetails> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                PaymentSuccess(totalamount, referal, token, myurl)),
+                PaymentSuccess(totalamount, referal, myurl)),
       );
     } catch (e) {
       Navigator.of(context).pop();

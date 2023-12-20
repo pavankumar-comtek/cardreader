@@ -33,21 +33,21 @@ class CustomButton extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child:
-        // Row(
-        //   mainAxisSize: MainAxisSize.min,
-        //   children: <Widget>[
-        Padding(
-          // padding: const EdgeInsets.all(12.0),
-            padding:
-            const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: Center(
-                child: Text(
+            // Row(
+            //   mainAxisSize: MainAxisSize.min,
+            //   children: <Widget>[
+            Padding(
+                // padding: const EdgeInsets.all(12.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                child: Center(
+                    child: Text(
                   label,
                   // textAlign: TextAlign.end,
                   textAlign: TextAlign.center,
                   style: defaultTs(context).merge(TextStyle(
                     color: (isEnabled ?? true)
-                        ? Theme.of(context).colorScheme.onBackground
+                        ? Colors.white
                         : Theme.of(context).focusColor.withOpacity(0.3),
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Urbanist',
@@ -137,15 +137,15 @@ class CustomButton_main extends StatelessWidget {
           child: InkWell(
             onTap: onTap,
             child:
-            // Row(
-            //   mainAxisSize: MainAxisSize.min,
-            //   children: <Widget>[
-            Padding(
-              // padding: const EdgeInsets.all(12.0),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24, vertical: 16),
-                child: Center(
-                    child: Text(
+                // Row(
+                //   mainAxisSize: MainAxisSize.min,
+                //   children: <Widget>[
+                Padding(
+                    // padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    child: Center(
+                        child: Text(
                       label,
                       // textAlign: TextAlign.end,
                       style: defaultTs(context).merge(TextStyle(

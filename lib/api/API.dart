@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'package:get/get.dart';
 import 'package:get/get_connect/connect.dart';
-import 'package:get_storage/get_storage.dart';
 
 class API extends GetConnect {
   final url = 'https://api.rydeum.info';
@@ -61,7 +60,8 @@ class API extends GetConnect {
     // final box1 = GetStorage();
     // final token = box1.read('TOKEN');
     print('Flutter Module -Flutter Module -TOKEEENNENNE dopayment: $token');
-    print('Flutter Module -Login {$url/master/liquidcashpayment} TOKEN: $token');
+    print(
+        'Flutter Module -Login {$url/master/liquidcashpayment} TOKEN: $token');
     // AppLogger.d('Login {$url/customer/signIn}');
     print('Flutter Module -Data - ${json.encode(paymentModel)}');
     final response = await post(
@@ -93,14 +93,14 @@ class API extends GetConnect {
     final response = await post(
       '$url/master/card/customer',
       jsonEncode({
-        "name": name,
+        "name": name.replaceAll(RegExp(r'\s+'), ''),
         "cardToken": cardToken,
       }),
       headers: header(1, authToken),
     );
 
     if (response.status.hasError) {
-      print("Flutter Module -"+response.body);
+      print("Flutter Module -" + response.body);
       if (response.status.code == 401 ||
           response.status.code == 404 ||
           response.status.code == 500) {

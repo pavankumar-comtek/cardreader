@@ -4,12 +4,17 @@ import 'package:cardreader/Common/ui_parameters.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton(
-      {Key? key, required this.label, this.onTap, this.isEnabled})
+      {Key? key,
+      required this.label,
+      this.onTap,
+      this.isEnabled,
+      this.fontSize})
       : super(key: key);
 
   final String label;
   final VoidCallback? onTap;
   final bool? isEnabled;
+  final double? fontSize;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,11 +51,11 @@ class CustomButton extends StatelessWidget {
                   // textAlign: TextAlign.end,
                   style: defaultTs(context).merge(TextStyle(
                     color: (isEnabled ?? true)
-                        ? Theme.of(context).colorScheme.onBackground
+                        ? Colors.white
                         : Theme.of(context).focusColor.withOpacity(0.3),
                     fontWeight: FontWeight.w700,
                     fontFamily: 'Urbanist',
-                    fontSize: 14,
+                    fontSize: fontSize,
                     // height: 1.5
                   )),
                 ))),

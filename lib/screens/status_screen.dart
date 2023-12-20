@@ -150,7 +150,6 @@ class _StatusScreenState extends State<StatusScreen> {
         Get.to(() => Payment(
             'https://pay.rydeum.info',
             'RA4BR',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjBmMzQxYzNiMjZiNzVlNmE2MDdlY2UiLCJrZXkiOiJhY2MiLCJhY2Nlc3NDb2RlIjo4ODQ5LCJpYXQiOjE2NzM0MjAzNTksImV4cCI6MTY3MzUwNjc1OSwic3ViIjoicHJvdmlkZXIifQ.r6WFmK0kqfBJmMe50VgyDuuIuWDymPIsF2PzMlESIew',
             cardInfo.cardNo!,
             cardInfo.cardexpiryDate!,
             cardInfo.cardName!.replaceAll(RegExp(r'\s+/$'), '')));
